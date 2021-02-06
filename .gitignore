@@ -1,3 +1,9 @@
+.idea
+results
+templateInput.txt
+templateProxy.txt
+args
+
 # Logs
 logs
 *.log
