@@ -1,5 +1,3 @@
-[![Install size](https://packagephobia.com/badge?p=xzerox-executor-quickstart)](https://packagephobia.com/result?p=xzerox-executor-quickstart)
-
 # xzerox-executor-quickstart
 
 This repository build for speedup adoption to [xzerox-executor](https://github.com/0fuz/xzerox-executor) project
