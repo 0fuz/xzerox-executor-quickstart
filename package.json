@@ -20,6 +20,6 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.25",
     "got": "^11.8.1",
-    "xzerox-executor": "file:../xzerox-executor"
+    "xzerox-executor": "^1.0.2"
   }
 }
