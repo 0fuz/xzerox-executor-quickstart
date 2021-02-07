@@ -18,8 +18,8 @@ Install the latest stable nodejs from here https://nodejs.org/en/download/.
 
 ```
 git clone https://github.com/0fuz/xzerox-executor-quickstart
-npm install
 npm install -g typescript ts-node --force
+npm install
 ```
 
 ### Supported cmd arguments
@@ -80,7 +80,8 @@ Execute code below to see what is it. All needed files will be created.
 ```
 ts-node run2.ts --input='templateInput.txt' --proxy='templateProxy.txt' --proxy_type='https' --threads=2
 ```
-Once executor receives legit arguments to run job it will create */args/run2.json* with passed arguments. Its useful when u dont need to pass each time arguments from cmd.
+Once executor receives legit arguments to run job it will create */args/run2.json* with passed arguments. 
+Its useful when you don't need to pass each time arguments from cmd.
 
 You can execute without arguments now
 ```

@@ -6,6 +6,7 @@ import {Init, JobResult} from "../xzerox-executor/dist/Init";
 import {InputHandlerConstant} from "../xzerox-executor/dist/Input";
 import {CacheLineTypes} from "../xzerox-executor/dist/FileCache";
 import {timeout, isItUsualError} from "../xzerox-executor/dist";
+import {FileCache, Metric, RequiredArgs} from "xzerox-executor/dist";
 
 // get the current filename
 // @ts-ignore
@@ -70,7 +71,8 @@ let init = new Init({
 let ctx: any = {}
 
 init.start(init.readArgs(),
-    async (args, fileCache, metric) => {
+    // it will be called once
+    async (args: RequiredArgs, fileCache: FileCache, metric: Metric) => {
         ctx.args = args;
         ctx.fileCache = fileCache;
         ctx.metric = metric;
@@ -103,5 +105,5 @@ init.start(init.readArgs(),
         }
 
     }).then(() => {
-        console.log('Work finished')
-    })
+    console.log('Work finished')
+})
