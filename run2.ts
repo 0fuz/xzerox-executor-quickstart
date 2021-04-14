@@ -1,50 +1,33 @@
 import {basename} from "path";
 import {writeFileSync, unlinkSync, existsSync} from 'fs'
 
-// this way is more clear but its not working well with IDE suggestions
-import {Init, JobResult} from "../xzerox-executor/dist/Init";
-import {InputHandlerConstant} from "../xzerox-executor/dist/Input";
-import {CacheLineTypes} from "../xzerox-executor/dist/FileCache";
-import {timeout, isItUsualError} from "../xzerox-executor/dist";
-import {FileCache, Metric, RequiredArgs} from "xzerox-executor/dist";
+// // import this way
+// import {JobResult, Init} from "xzerox-executor/dist/Init";
+// import {InputHandlerConstant} from "xzerox-executor/dist/Input";
+// import {FileCache, CacheLineTypes} from "xzerox-executor/dist/FileCache";
+// import {timeout} from "xzerox-executor/dist/Helper";
+// import {isItUsualError} from "xzerox-executor/dist/HttpHelper";
+// import {RequiredArgs} from "xzerox-executor/dist/Init";
+
+// or import this way
+import {
+    JobResult,
+    Init,
+    InputHandlerConstant,
+    FileCache,
+    CacheLineTypes,
+    timeout,
+    isItUsualError,
+    RequiredArgs,
+    Metric
+} from "xzerox-executor";
+import {makeTemplate} from "./tempFunctions";
 
 // get the current filename
 // @ts-ignore
 let projectName = basename(__filename, '.ts');
 
-// this function only for better understanding of cmd parameters
-// it creates inputFile and proxyFile templates
-function makeTemplate() {
-    function makeTemplateInput() {
-        const templateInput = './templateInput.txt'
-        const inputData = []
-        for (let i = 0; i < 1000; i++) {
-            inputData.push(`job#left${i}:right${i}`)
-        }
-        writeFileSync(templateInput, inputData.join('\n'))
-    }
-    makeTemplateInput()
-
-    function makeTemplateProxy() {
-        const templateProxy = './templateProxy.txt'
-        const data = []
-        for (let i = 0; i < 10; i++) {
-            data.push(`1.2.3.${i}:123${i}`)
-            data.push(`username:password@1.2.3.${i}:123${i}`)
-            data.push(`username:password@subdomain${i}.asd:1234`)
-        }
-        writeFileSync(templateProxy, data.join('\n'))
-    }
-    makeTemplateProxy()
-
-    // remove result file to ensure work
-    // you can also comment it to check how 'cacheSystem' works
-    const processedTempPath = `./results/${projectName}_processed.txt`
-    if (existsSync(processedTempPath)) {
-        unlinkSync(processedTempPath)
-    }
-}
-makeTemplate();
+makeTemplate(projectName); // create sample input and proxy files
 
 let init = new Init({
     fileCacheOptions: {

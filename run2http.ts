@@ -1,49 +1,21 @@
 import {basename} from "path";
-import {writeFileSync, unlinkSync, existsSync} from 'fs'
-
-// this way is more clear but its not working well with IDE suggestions
-import {Init, JobResult} from "../xzerox-executor/dist/Init";
-import {InputHandlerConstant} from "../xzerox-executor/dist/Input";
-import {CacheLineTypes} from "../xzerox-executor/dist/FileCache";
-import {timeout, isItUsualError, hasKey} from "../xzerox-executor/dist";
 import got from "got";
+import {makeTemplate} from "./tempFunctions"; // its only for sample purposes
+
+import {
+    JobResult,
+    Init,
+    InputHandlerConstant,
+    CacheLineTypes,
+    isItUsualError,
+    hasKey
+} from "xzerox-executor";
 
 // get the current filename
 // @ts-ignore
 let projectName = basename(__filename, '.ts');
 
-// You should remove it on real project
-function makeTemplate() {
-    function makeTemplateInput() {
-        const templateInput = './templateInput.txt'
-        const inputData = []
-        for (let i = 0; i < 1000; i++) {
-            inputData.push(`job#left${i}:right${i}`)
-        }
-        writeFileSync(templateInput, inputData.join('\n'))
-    }
-    makeTemplateInput()
-
-    function makeTemplateProxy() {
-        const templateProxy = './templateProxy.txt'
-        const data = []
-        for (let i = 0; i < 10; i++) {
-            data.push(`1.2.3.${i}:123${i}`)
-            data.push(`username:password@1.2.3.${i}:123${i}`)
-            data.push(`username:password@subdomain${i}.asd:1234`)
-        }
-        writeFileSync(templateProxy, data.join('\n'))
-    }
-    makeTemplateProxy()
-
-    // remove result file to ensure work
-    // you can also comment it to check how 'cacheSystem' works
-    const processedTempPath = `./results/${projectName}_processed.txt`
-    if (existsSync(processedTempPath)) {
-        unlinkSync(processedTempPath)
-    }
-}
-makeTemplate();
+makeTemplate(projectName); // create sample input and proxy files
 
 let init = new Init({
     fileCacheOptions: {
@@ -64,19 +36,26 @@ let init = new Init({
 
 let ctx: any = {}
 
-init.start(init.readArgs(),
+init.start(
+    // read cmd args or try to find previous setup of commands via .json config file.
+    init.readArgs(),
+    // make some variables globally accessible:
     async (args, fileCache, metric) => {
         ctx.args = args;
         ctx.fileCache = fileCache;
         ctx.metric = metric;
     },
+    // handling job input data and result
     async (data: string[], agent: any) => {
         try {
+            // allowed to handle job execution right there
+            // but better make separate class or function
+            // like below:
             let ip = await handler(data, agent)
 
-            // use this place for handling job result
+            // handling job result
 
-            ctx.fileCache.save('processed', ip)
+            ctx.fileCache.save('processed', ip) // store job results
             ctx.metric.inc('ipRetrieved', 1)
 
             return JobResult.Finished
